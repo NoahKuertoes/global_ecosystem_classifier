@@ -49,7 +49,7 @@ This project is designed and pursued in the context of the *Data Analytics Consu
   <tr>
     <td><a href="https://www.meteostat.net/">Meteostat</a></td>
     <td>Library of global weatherstations</td>
-    <td>Data is sourced through the pyhton library <code>meteostat</code> <a href=https://meteostat.net/en/blog/analyze-historical-weather-data-python>(documentation)</a></td>
+    <td>Data is sourced through the python library <code>meteostat</code> <a href=https://meteostat.net/en/blog/analyze-historical-weather-data-python>(documentation)</a></td>
     <td>Representation bias towards EU and NA</td>
   </tr>
   <tr>

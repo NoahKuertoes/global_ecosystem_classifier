@@ -94,7 +94,84 @@ Hence, the focus of this project was to integrate and automate the classificatio
 
 ## 2. Data acquisition and storage
 
+All data is acquired through EarthData or through the GoogleEarth engine. The data is stored on an AWS postgreSQL server. Currently migrating. 
+
+### 2.1 Exemplary visualisation of input data
+
+1.) *VIIRS* night time illumination
+
+![image](https://github.com/user-attachments/assets/64901a8b-13ee-469e-b9b4-165d236c13b9)
+
+---
+
+2.) *MODIS* vegetation index 
+
+![image](https://github.com/user-attachments/assets/362c6f73-69bc-4bfa-9429-436374585388)
+
+---
+
+3.) *Copernicus* elevation data
+
+![image](https://github.com/user-attachments/assets/7b5c0f56-360c-40e2-9351-8c0866b568ea)
+
+
 ## 3. Modelling 
 
-## 4. Web integration
+For modelling all parameters were aggregated for each grid cell and a model was trained on 73 different locations of 15 different ecosystems using `RandomForestClassifier` from `sklearn`.
+
+```
+label_encoder = LabelEncoder()
+scaler = StandardScaler()
+
+#define model data
+X = df.drop(columns=["ecosystem", "name"])
+y = label_encoder.fit_transform(df["ecosystem"])
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+#split data
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+
+#modelling
+model = RandomForestClassifier(n_estimators=100, random_state=42)
+model.fit(X_train, y_train)
+```
+
+### 3.1 Training data (2020)
+
+![image](https://github.com/user-attachments/assets/9a3f938b-aac0-4050-a140-53f5cf34da81)
+
+### 3.2 Classification (2012)
+
+![image](https://github.com/user-attachments/assets/94658c5a-c612-4de1-8781-79424dd4cd11)
+
+
+## 4. Forecasting
+
+For forecasting `LinearRegression` from `sklearn` was performed for each parameter per grid cell individually.
+
+```
+# Prepare data for the model
+X, y = np.array(df_pixel["year"]).reshape(-1, 1), np.array(df_pixel[parameter])
+
+# Check if there is enough data to fit the model
+if len(X) > 1:
+    # Fit the model and calculate R-squared
+    model.fit(X, y)
+    r_squared = model.score(X, y)
+    predict_val = model.predict(np.array([[predict_year]]))[0]  # Extract single value
+```
+
+### 4.1 Classification of forecast for 2030
+
+![image](https://github.com/user-attachments/assets/e46a7b0a-475c-4b60-b6ca-9a0816167f44)
+
+### 4.1 Classification of forecast for 2100
+
+![image](https://github.com/user-attachments/assets/4613cb37-1e20-4aad-bb41-f755159b70fd)
+
+
+
+
 
